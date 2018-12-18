@@ -18,6 +18,9 @@ namespace ValveController.Droid
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App(new AndroidInitializer()));
+
+            //StaturBarColor
+            Window.SetStatusBarColor(Android.Graphics.Color.ParseColor("#161a21"));
         }
     }
 

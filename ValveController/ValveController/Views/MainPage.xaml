@@ -2,10 +2,91 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ValveController.Views.MainPage"
-             Title="{Binding Title}">
+             Title="{Binding Title}"
+             BackgroundColor="{StaticResource darkBlue}">
 
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <Label Text="Welcome to Xamarin Forms and Prism!" />
-    </StackLayout>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="darkBlue">#15354a</Color>
+            <Color x:Key="mediumBlue">#25516a</Color>
+            <Color x:Key="lightBlue">#316282</Color>
+            <Color x:Key="textBlue">#4993c0</Color>
+            <Color x:Key="textGray">#b5b3b5</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <StackLayout HorizontalOptions="Fill" VerticalOptions="Fill" Margin="20,10">
+
+            <StackLayout VerticalOptions="Start" IsVisible="{Binding LoginVisibility}">
+                <Label Text="Inicie uma sessão para se conectar a válvula:" TextColor="{StaticResource textGray}" HorizontalTextAlignment="Center"/>
+                <Entry Text="{Binding LoginUserNameEntry}" Placeholder="nome" BackgroundColor="{StaticResource lightBlue}" PlaceholderColor="{StaticResource mediumBlue}" TextColor="{StaticResource textGray}"/>
+                <Entry Text="{Binding LoginUserPasswordEntry}" Placeholder="senha" BackgroundColor="{StaticResource lightBlue}" PlaceholderColor="{StaticResource mediumBlue}" TextColor="{StaticResource textGray}" IsPassword="True"/>
+                <Button Text="INICIAR SESSÃO" IsEnabled="{Binding IsNotBusy}" IsVisible="{Binding IsNotLoggingIn}" TextColor="{StaticResource textBlue}" BackgroundColor="{StaticResource mediumBlue}" Command="{Binding LoginCommand}"/>
+                <ActivityIndicator Color="{StaticResource lightBlue}" IsVisible="{Binding IsLoggingIn}" IsRunning="{Binding IsLoggingIn}"/>
+            </StackLayout>
+
+            <StackLayout VerticalOptions="Start" IsVisible="{Binding IsLoggedIn}">
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                    <Label Text="Usuário logado: " TextColor="{StaticResource textGray}"/>
+                    <Label Text="{Binding LoggedInUserNameLabel}" TextColor="{StaticResource textGray}" FontAttributes="Bold"/>
+                </StackLayout>
+                <Button Text="DESCONECTAR" IsEnabled="{Binding IsNotBusy}" TextColor="{StaticResource textBlue}" BackgroundColor="{StaticResource mediumBlue}" Command="{Binding LogOutCommand}" Padding="30, 0"/>
+            </StackLayout>
+
+            <StackLayout VerticalOptions="Start" IsVisible="{Binding IsLoggedInAsAdmin}">
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                    <Label Text="Usuário logado: " TextColor="{StaticResource textGray}"/>
+                    <Label Text="{Binding LoggedInUserNameLabel}" TextColor="{StaticResource textGray}" FontAttributes="Bold"/>
+                </StackLayout>
+                <Button Text="DESCONECTAR" IsEnabled="{Binding IsNotBusy}" TextColor="{StaticResource textBlue}" BackgroundColor="{StaticResource mediumBlue}" Command="{Binding LogOutCommand}" Padding="30, 0"/>
+            </StackLayout>
+
+            <StackLayout VerticalOptions="StartAndExpand" IsVisible="{Binding IsLoggedInAsAdmin}">
+                <Entry Text="{Binding SignUpUserNameEntry}" Placeholder="nome" BackgroundColor="{StaticResource lightBlue}" PlaceholderColor="{StaticResource mediumBlue}" TextColor="{StaticResource textGray}"/>
+                <Entry Text="{Binding SignUpUserPasswordEntry}" Placeholder="senha" BackgroundColor="{StaticResource lightBlue}" PlaceholderColor="{StaticResource mediumBlue}" TextColor="{StaticResource textGray}" IsPassword="True"/>
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="O usuário será administrador?" TextColor="{StaticResource textGray}" VerticalOptions="Center" HorizontalOptions="Start"/>
+                    <Switch IsToggled="{Binding SignUpUserIsAdminSwitch}" VerticalOptions="Center" HorizontalOptions="Center" OnColor="{StaticResource lightBlue}"/>
+                    <Button Text="CADASTRAR" IsEnabled="{Binding IsNotBusy}" VerticalOptions="Center" HorizontalOptions="EndAndExpand" IsVisible="{Binding IsNotSigningUp}" TextColor="{StaticResource textBlue}" BackgroundColor="{StaticResource mediumBlue}" Command="{Binding SignUpCommand}"/>
+                </StackLayout>
+            </StackLayout>
+            
+            <StackLayout VerticalOptions="CenterAndExpand" BackgroundColor="{StaticResource mediumBlue}" Padding="0, 10">
+                <Label Text="Estado de conexão com a válvula:" TextColor="{StaticResource textGray}" HorizontalTextAlignment="Center"/>
+                <Label Text="{Binding ConectionState}" HorizontalTextAlignment="Center" TextColor="{StaticResource textGray}" FontAttributes="Bold"/>
+            </StackLayout>
+
+            <StackLayout VerticalOptions="EndAndExpand" BackgroundColor="{StaticResource mediumBlue}" Padding="0, 10" IsVisible="{Binding IsLoggedIn}">
+                <ProgressBar Progress="{Binding PercentProgressBar}" ProgressColor="{StaticResource lightBlue}"/>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                    <Label Text="Porcentagem de abertura atual: " TextColor="{StaticResource textGray}"/>
+                    <Label Text="{Binding PercentProgressBarLabel}" TextColor="{StaticResource textGray}" FontAttributes="Bold"/>
+                    <Label Text="%" TextColor="{StaticResource textGray}" FontAttributes="Bold"/>
+                </StackLayout>
+            </StackLayout>
+
+            <StackLayout VerticalOptions="CenterAndExpand" BackgroundColor="{StaticResource mediumBlue}" Padding="0, 10" IsVisible="{Binding IsLoggedInAsAdmin}">
+                <ProgressBar Progress="{Binding PercentProgressBar}" Margin="10, 0"/>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                    <Label Text="Porcentagem de abertura atual: " TextColor="{StaticResource textGray}"/>
+                    <Label Text="{Binding PercentProgressBarLabel}" TextColor="{StaticResource textGray}" FontAttributes="Bold"/>
+                    <Label Text="%" TextColor="{StaticResource textGray}" FontAttributes="Bold"/>
+                </StackLayout>
+            </StackLayout>
+
+            <StackLayout VerticalOptions="End">
+                <Slider Value="{Binding PercentSlider}" Maximum="100" ThumbColor="{StaticResource textBlue}" MinimumTrackColor="{StaticResource textBlue}" MaximumTrackColor="{StaticResource textGray}"/>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                    <Label Text="Porcentagem de abertura desejado: " TextColor="{StaticResource textGray}"/>
+                    <Label Text="{Binding PercentSlider}" TextColor="{StaticResource textGray}" FontAttributes="Bold"/>
+                    <Label Text="%" TextColor="{StaticResource textGray}" FontAttributes="Bold"/>
+                </StackLayout>
+                <Button Text="MODIFICAR VÁLVULA" IsEnabled="{Binding IsNotBusy}" IsVisible="{Binding IsNotValveRotating}" TextColor="{StaticResource textBlue}" BackgroundColor="{StaticResource mediumBlue}" Command="{Binding ModifyValveCommand}"/>
+                <ActivityIndicator Color="{StaticResource lightBlue}" IsVisible="{Binding IsValveRotating}" IsRunning="{Binding IsValveRotating}"/>
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
+
 
 </ContentPage>
